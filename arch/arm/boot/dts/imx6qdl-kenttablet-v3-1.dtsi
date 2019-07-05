@@ -820,28 +820,33 @@
 
 		pinctrl_uart1: uart1grp {
 			fsl,pins = <
-				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-				MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
+				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
+                MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
 			>;
 		};
+		
+		pinctrl_uart2: uart2grp {
+            fsl,pins = <
+                MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
+                MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
+              >;
+                };
 
-		pinctrl_uart5_1: uart5grp-1 {
-			fsl,pins = <
-				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-				MX6QDL_PAD_KEY_COL4__UART5_RTS_B	0x1b0b1
-				MX6QDL_PAD_KEY_ROW4__UART5_CTS_B	0x1b0b1
-			>;
-		};
-
-		pinctrl_uart5dte_1: uart5dtegrp-1 {
-			fsl,pins = <
-				MX6QDL_PAD_KEY_ROW1__UART5_TX_DATA	0x1b0b1
-				MX6QDL_PAD_KEY_COL1__UART5_RX_DATA	0x1b0b1
-				MX6QDL_PAD_KEY_ROW4__UART5_RTS_B	0x1b0b1
-				MX6QDL_PAD_KEY_COL4__UART5_CTS_B	0x1b0b1
-			>;
-		};
+ 		pinctrl_uart4: uart4grp {
+                        fsl,pins = <
+                MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
+                MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA	0x1b0b1
+                //MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B	0x1b0b1
+                //MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B	0x1b0b1
+             >;
+                };
+        
+        pinctrl_uart5_2: uart5grp-2 {
+             fsl,pins = <
+                MX6QDL_PAD_CSI0_DAT14__UART5_TX_DATA	0x1b0b1
+                MX6QDL_PAD_CSI0_DAT15__UART5_RX_DATA	0x1b0b1
+                        >;
+                };
 
 		pinctrl_usbotg: usbotggrp {
 			fsl,pins = <
@@ -1039,6 +1044,28 @@
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
+	dma-names = "","";
+	status = "okay";
+};
+
+&uart2 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_uart2>;
+        dma-names = "","";
+        status = "okay";
+};
+&uart4 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_uart4>;
+        dma-names = "","";
+        status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5_2>;
+	fsl,uart-has-rtscts;
+	dma-names = "","";
 	status = "okay";
 };
 
