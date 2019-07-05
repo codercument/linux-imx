@@ -1,0 +1,4 @@
+make -j8
+make dtbs
+cp arch/arm/boot/dts/imx6dl-kenttablet-v3-1.dtb /work/temp/
+cp arch/arm/boot/zImage /work/temp/
