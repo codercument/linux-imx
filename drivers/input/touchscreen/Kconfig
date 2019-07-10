@@ -1239,6 +1239,17 @@ config TOUCHSCREEN_ROHM_BU21023
 	  To compile this driver as a module, choose M here: the
 	  module will be called bu21023_ts.
 
+config TOUCHSCREEN_KKEDT
+	tristate "Kentkart EDT touchscreen"
+	depends on I2C
+	depends on GPIOLIB
+	help
+	  Say Y here if you have a touchscreen using the Kentkart 
+	  EDT Touchscreen.
+	  If unsure, say N.
+	  To compile this driver as a module, choose M here: the
+	  module will be called capts.
+
 source "drivers/input/touchscreen/synaptics_dsx/Kconfig"
 endif
 

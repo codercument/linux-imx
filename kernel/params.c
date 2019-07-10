@@ -212,6 +212,44 @@ static char *next_arg(char *args, char **param, char **val)
 	return skip_spaces(next);
 }
 
+int parse_args_lcd(char * args){
+
+	int lcd_mode=-1;
+	char *param, *val;
+	char *token;
+
+	/* Chew leading spaces */
+	args = skip_spaces(args);
+
+	while (*args) {
+		args = next_arg(args, &param, &val);
+		pr_notice("*** %s:%s\n",param,val);
+
+		if(strcmp(param,"video")==0){
+			/* get the first token */
+			token = strsep(&val, ",");
+
+			if((strstr(token,"mxcfb0")!=NULL)){
+				if((strstr(token,"lcd")!=NULL)){
+					lcd_mode=0;
+					break;
+				}
+				if((strstr(token,"ldb")!=NULL)){
+					lcd_mode=1;
+					break;
+				}
+				if((strstr(token,"hdmi")!=NULL)){
+					lcd_mode=2;
+					break;
+				}
+			}
+		}
+
+	}
+
+	return lcd_mode;
+
+}
 /* Args looks like "foo=bar,bar2 baz=fuz wiz". */
 char *parse_args(const char *doing,
 		 char *args,

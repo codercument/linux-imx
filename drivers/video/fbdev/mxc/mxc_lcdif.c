@@ -51,6 +51,13 @@ static struct fb_videomode lcdif_modedb[] = {
 };
 static int lcdif_modedb_sz = ARRAY_SIZE(lcdif_modedb);
 
+static int select_lcd = -1;
+int lcd_display_is(void)
+{
+	return select_lcd;
+}
+EXPORT_SYMBOL_GPL(lcd_display_is);
+
 static int lcdif_init(struct mxc_dispdrv_handle *disp,
 	struct mxc_dispdrv_setting *setting)
 {
@@ -81,6 +88,8 @@ static int lcdif_init(struct mxc_dispdrv_handle *disp,
 		if (fb_mode_is_equal(&m, &modedb[i])) {
 			fb_add_videomode(&modedb[i],
 					&setting->fbi->modelist);
+			sscanf(modedb[i].name,"%d",&select_lcd);
+			printk("selected lcd :%d\n", select_lcd);
 			break;
 		}
 	}

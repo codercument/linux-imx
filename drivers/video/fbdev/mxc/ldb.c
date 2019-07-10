@@ -294,6 +294,13 @@ static const struct of_device_id ldb_dt_ids[] = {
 };
 MODULE_DEVICE_TABLE(of, ldb_dt_ids);
 
+static int select_lcd = -1;
+int ldb_display_is(int lcd)
+{
+	return (lcd == select_lcd) ? 1 : 0;
+}
+EXPORT_SYMBOL_GPL(ldb_display_is);
+
 static int ldb_init(struct mxc_dispdrv_handle *mddh,
 		    struct mxc_dispdrv_setting *setting)
 {
@@ -303,11 +310,19 @@ static int ldb_init(struct mxc_dispdrv_handle *mddh,
 	struct ldb_chan *chan;
 	struct fb_videomode fb_vm;
 	int chno;
+	int lcdno = setting->dft_mode_str[0] - 0x30;
+
+
 
 	chno = ldb->chan[ldb->primary_chno].is_used ?
 		!ldb->primary_chno : ldb->primary_chno;
 
 	chan = &ldb->chan[chno];
+
+	if(lcdno > 9 || lcdno < 0){
+		dev_err(dev, "LVDS channel%d dft lcd wrong (%s)\n", chno,setting->dft_mode_str);
+		return -EBUSY;
+	}
 
 	if (chan->is_used) {
 		dev_err(dev, "LVDS channel%d is already used\n", chno);
@@ -321,7 +336,7 @@ static int ldb_init(struct mxc_dispdrv_handle *mddh,
 	chan->is_used = true;
 
 	chan->fbi = fbi;
-
+	select_lcd = lcdno;
 	fb_videomode_from_videomode(&chan->vm, &fb_vm);
 	fb_videomode_to_var(&fbi->var, &fb_vm);
 

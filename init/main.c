@@ -449,6 +449,20 @@ void __init parse_early_param(void)
 	done = 1;
 }
 
+int get_lcd_mode(void)
+{
+	int lcd_mode=-1;
+	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
+
+	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+
+	lcd_mode=parse_args_lcd(tmp_cmdline);
+
+	return lcd_mode;
+}
+
+EXPORT_SYMBOL_GPL(get_lcd_mode);
+
 void __init __weak smp_setup_processor_id(void)
 {
 }
