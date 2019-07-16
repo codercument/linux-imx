@@ -377,6 +377,18 @@ config SND_SOC_IMX_CS42888
 	 Say Y if you want to add support for SoC audio on an i.MX board with
 	 a cs42888 codec.
 
+config SND_SOC_IMX_CS42L73
+	tristate "SoC Audio support for i.MX6 SMARC boards with cs42L73"
+	depends on OF && I2C
+	select SND_SOC_CS42L73 
+	select SND_SOC_IMX_PCM_DMA
+	select SND_SOC_IMX_AUDMUX
+	select SND_SOC_FSL_SSI
+	help
+	 SoC Audio support for i.MX6 SMARC boards with cs42L73
+	 Say Y if you want to add support for SoC audio on an i.MX6 SMARC board with
+	 a cs42L73 codec
+
 config SND_SOC_IMX_WM8962
 	tristate "SoC Audio support for i.MX boards with wm8962"
 	depends on OF && I2C && INPUT

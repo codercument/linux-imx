@@ -223,4 +223,6 @@
 #define CS42L73_MMCC(id)	(CS42L73_XSPMMCC + (id << 1))
 #define CS42L73_SPFS(id)	((id == CS42L73_ASP) ? CS42L73_ASPC : CS42L73_VXSPFS)
 
+#define CS42L73_SYSCLK				0x00
+
 #endif	/* __CS42L73_H__ */
