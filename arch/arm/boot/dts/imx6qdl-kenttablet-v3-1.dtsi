@@ -891,17 +891,17 @@
                 display-timings {
                         native-mode = <&timing0>;
                         timing0: g070vw01 {
-                                clock-frequency = <51200000>;
-                                hactive = <1024>;
-                                vactive = <600>;
-                                hback-porch = <160>;
-                                hfront-porch = <160>;
-                                vback-porch = <18>;
-                                vfront-porch = <17>;
-                                hsync-len = <10>;
-                                vsync-len = <1>;
-                                /*hsync-active = <0>;
-                                vsync-active = <0>;*/
+                                clock-frequency = <71100000>;
+                                hactive = <1280>;
+                                vactive = <800>;
+                                hback-porch = <80>;
+                                hfront-porch = <80>;
+                                vback-porch = <11>;
+                                vfront-porch = <12>;
+                                hsync-len = <8>;
+                                vsync-len = <6>;
+                                hsync-active = <1>;
+                                vsync-active = <1>;
                         };
                 };
         };
