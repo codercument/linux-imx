@@ -227,7 +227,7 @@
 
 	lcd@0 {
 		compatible = "fsl,lcd";
-		ipu_id = <0>;
+		ipu_id = <1>;
 		disp_id = <0>;
 		default_ifmt = "RGB24";
 		pinctrl-names = "default";

@@ -18,11 +18,11 @@
 
 &ldb {
 	lvds-channel@0 {
-		crtc = "ipu1-di0";
+		crtc = "ipu1-di1";
 	};
 
 	lvds-channel@1 {
-		crtc = "ipu1-di1";
+		crtc = "ipu1-di0";
 	};
 };
 
@@ -31,6 +31,14 @@
 };
 
 &mxcfb2 {
+	status = "okay";
+};
+
+&mxcfb3 {
+	status = "okay";
+};
+
+&mxcfb4 {
 	status = "okay";
 };
 
