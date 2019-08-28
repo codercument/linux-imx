@@ -435,21 +435,21 @@ static int capts_probe(struct i2c_client *client, const struct i2c_device_id *id
 	irq_handler_fnc irq_handler;
 	lcd_mode=get_lcd_mode();
 	lcd_display_num=lcd_display_is();
-	printk("%s,%d\n",__func__,__LINE__);
+
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	{
 		pr_info("cap_ts_probe: need I2C_FUNC_I2C\n");
 		return -ENODEV;
 
 	}
-	printk("%s,%d\n",__func__,__LINE__);
+
 	ts = kmalloc(sizeof(struct capts_data), GFP_KERNEL);
 	if (ts == NULL)
 	{
 		return  -ENOMEM;
 
 	}
-	printk("%s,%d\n",__func__,__LINE__);
+
 	struct device_node *np = client->dev.of_node;
 	//ts->client->irq= of_get_named_gpio(np, "gpio_ts_int", 0);
 	/* setup reset gpio */
@@ -463,11 +463,11 @@ static int capts_probe(struct i2c_client *client, const struct i2c_device_id *id
 		}
 		gpio_direction_output(reset_gpio, 1);
 	}
-	printk("%s,%d\n",__func__,__LINE__);
+
 	ts->client = client;
 	i2c_set_clientdata(client, ts);
 
-	printk("%s,%d\n",__func__,__LINE__);
+
 	if (ts->client->irq)
 	{
 		ret = 1;
@@ -477,7 +477,7 @@ static int capts_probe(struct i2c_client *client, const struct i2c_device_id *id
 			kfree(ts);
 			return  -ENXIO;
 		}
-		printk("%s,%d\n",__func__,__LINE__);
+
 		ret = request_threaded_irq(client->irq, quick_check_irq_handler,irq_handler,IRQF_TRIGGER_FALLING, ts->client->name, ts);
 		if (ret > 0)
 		{
@@ -486,14 +486,14 @@ static int capts_probe(struct i2c_client *client, const struct i2c_device_id *id
 
 		}
 	}else{
-		printk("%s,%d\n",__func__,__LINE__);
+
 		kfree(ts);
 		return  -ENODEV;
 	}
 	for (i = 0; i < TS_MAX_TOUCH; i++) /* _SUPPORT_MULTITOUCH_ */
 		g_Mtouch_info[i].strength = -1;
 
-	printk("%s,%d\n",__func__,__LINE__);
+
 	ts->input_dev = input_allocate_device();
 	if (!ts->input_dev)
 	{
@@ -516,7 +516,7 @@ static int capts_probe(struct i2c_client *client, const struct i2c_device_id *id
 	ts->input_dev->id.vendor  = 0x0001;
 	ts->input_dev->id.product = 0x0001;
 	ts->input_dev->id.version = 0x0100;
-	printk("%s,%d\n",__func__,__LINE__);
+
 	//input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0, 800, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0, ts->max_x, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0, ts->max_y, 0, 0);
