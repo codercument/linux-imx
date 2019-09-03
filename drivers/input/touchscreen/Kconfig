@@ -1251,7 +1251,7 @@ config TOUCHSCREEN_KKEDT
 	  module will be called capts.
 
 config TOUCHSCREEN_EGALAX_I2C
-	tristate "Kentkart EDT touchscreen"
+	tristate "Egalax I2C touchscreen"
 	depends on I2C
 	depends on GPIOLIB
 	help
