@@ -540,9 +540,9 @@
                                 #size-cells = <0>;
                                 compatible = "nxp,pca954x-bus";
                                 reg = <0>;
-                                kingley-edt@38 {
-                                        compatible = "kentkart,edt";
-                                        reg = <0x38>;
+                                egalax_i2c@2a {
+                                        compatible = "eeti,egalax_i2c";
+                                        reg = <0x2a>;
                                         pinctrl-names = "default";
                                         pinctrl-0 = <&pinctrl_gpio_ts_int>;
                                         int-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;

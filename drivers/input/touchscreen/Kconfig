@@ -1250,6 +1250,17 @@ config TOUCHSCREEN_KKEDT
 	  To compile this driver as a module, choose M here: the
 	  module will be called capts.
 
+config TOUCHSCREEN_EGALAX_I2C
+	tristate "Kentkart EDT touchscreen"
+	depends on I2C
+	depends on GPIOLIB
+	help
+	  Say Y here if you have a touchscreen using the Kentkart 
+	  EDT Touchscreen.
+	  If unsure, say N.
+	  To compile this driver as a module, choose M here: the
+	  module will be called capts.
+
 source "drivers/input/touchscreen/synaptics_dsx/Kconfig"
 endif
 
