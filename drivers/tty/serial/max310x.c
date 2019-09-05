@@ -248,6 +248,8 @@
 #define MAX14830_BRGCFG_CLKDIS_BIT	(1 << 6) /* Clock Disable */
 #define MAX14830_REV_ID			(0xb0)
 
+int freq=0;
+
 struct max310x_devtype {
 	char	name[9];
 	int	nr;
@@ -579,6 +581,7 @@ static int max310x_set_ref_clk(struct max310x_port *s, unsigned long freq,
 	}
 
 	/* Configure clock source */
+	clksrc = 0x00;
 	clksrc = xtal ? MAX310X_CLKSRC_CRYST_BIT : MAX310X_CLKSRC_EXTCLK_BIT;
 
 	/* Configure PLL */
@@ -1095,10 +1098,15 @@ static int max310x_gpio_direction_output(struct gpio_chip *chip,
 static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
 			 struct regmap *regmap, int irq, unsigned long flags)
 {
-	int i, ret, fmin, fmax, freq, uartclk;
+	int i, ret, fmin, fmax, uartclk;
 	struct clk *clk_osc, *clk_xtal;
 	struct max310x_port *s;
 	bool xtal = false;
+
+	int status;
+
+	fmin = 500000;
+	fmax = 35000000;
 
 	if (IS_ERR(regmap))
 		return PTR_ERR(regmap);
@@ -1110,7 +1118,7 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
 		dev_err(dev, "Error allocating port structure\n");
 		return -ENOMEM;
 	}
-
+/*
 	clk_osc = devm_clk_get(dev, "osc");
 	clk_xtal = devm_clk_get(dev, "xtal");
 	if (!IS_ERR(clk_osc)) {
@@ -1129,12 +1137,12 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
 		dev_err(dev, "Cannot get clock\n");
 		return -EINVAL;
 	}
-
+*/
 	ret = clk_prepare_enable(s->clk);
 	if (ret)
 		return ret;
 
-	freq = clk_get_rate(s->clk);
+	//freq = clk_get_rate(s->clk);
 	/* Check frequency limits */
 	if (freq < fmin || freq > fmax) {
 		ret = -ERANGE;
@@ -1311,6 +1319,7 @@ static int max310x_spi_probe(struct spi_device *spi)
 	unsigned long flags = 0;
 	struct regmap *regmap;
 	int ret;
+	int status;
 
 	/* Setup SPI bus */
 	spi->bits_per_word	= 8;
@@ -1325,6 +1334,11 @@ static int max310x_spi_probe(struct spi_device *spi)
 			of_match_device(max310x_dt_ids, &spi->dev);
 
 		devtype = (struct max310x_devtype *)of_id->data;
+		status = of_property_read_u32(spi->dev.of_node,
+				"max310x-clock-freq", &freq);
+		if (status) {
+			freq = 0;
+		}
 	} else {
 		const struct spi_device_id *id_entry = spi_get_device_id(spi);
 
