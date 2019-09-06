@@ -354,4 +354,6 @@ config BT_QCOMSMD
 	  Say Y here to compile support for HCI over Qualcomm SMD into the
 	  kernel or say M to compile as a module.
 
+source "drivers/bluetooth/mbtc_SDIO/Kconfig"
+
 endmenu

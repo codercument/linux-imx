@@ -982,7 +982,6 @@ static int fw_load_from_user_helper(struct firmware *firmware,
 				    unsigned int opt_flags, long timeout)
 {
 	struct firmware_priv *fw_priv;
-
 	fw_priv = fw_create_instance(firmware, name, device, opt_flags);
 	if (IS_ERR(fw_priv))
 		return PTR_ERR(fw_priv);
@@ -1154,8 +1153,10 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
 	ret = 0;
 	timeout = firmware_loading_timeout();
 	if (opt_flags & FW_OPT_NOWAIT) {
+
 		timeout = usermodehelper_read_lock_wait(timeout);
 		if (!timeout) {
+
 			dev_dbg(device, "firmware: %s loading timed out\n",
 				name);
 			ret = -EBUSY;
@@ -1185,7 +1186,6 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
 
 	if (!ret)
 		ret = assign_firmware_buf(fw, device, opt_flags);
-
 	usermodehelper_read_unlock();
 
  out:
@@ -1193,7 +1193,6 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
 		release_firmware(fw);
 		fw = NULL;
 	}
-
 	*firmware_p = fw;
 	return ret;
 }
@@ -1223,7 +1222,6 @@ request_firmware(const struct firmware **firmware_p, const char *name,
 		 struct device *device)
 {
 	int ret;
-
 	/* Need to pin this module until return */
 	__module_get(THIS_MODULE);
 	ret = _request_firmware(firmware_p, name, device, NULL, 0,
