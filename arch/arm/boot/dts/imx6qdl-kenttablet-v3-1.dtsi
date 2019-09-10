@@ -398,6 +398,15 @@
 		 reg = <0x24>;
 		 //shutdown-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;/* Bank5, pin19 */
     };
+    
+    pca9535: gpio@20 {
+        compatible = "nxp,pca9535";
+        gpio-controller;
+        #gpio-cell = <2>;
+        reg = <0x20>;
+		pca,gpio-base = <400>;
+        status = "okay";
+    };
  
 };
 

@@ -738,7 +738,7 @@ static int pca953x_probe(struct i2c_client *client,
 	struct pca953x_platform_data *pdata;
 	struct pca953x_chip *chip;
 	int irq_base = 0;
-	int ret;
+	int ret,gpio_base,status;
 	u32 invert = 0;
 	struct regulator *reg;
 
@@ -793,6 +793,15 @@ static int pca953x_probe(struct i2c_client *client,
 			chip->driver_data = acpi_id->driver_data;
 		}
 	}
+
+	status = of_property_read_u32(client->dev.of_node, "pca,gpio-base", &gpio_base);
+		if (status) {
+			gpio_base = -1;
+		}
+
+	chip->gpio_start=gpio_base;
+
+	//printk("func=%s, line=%d, chip->gpio_start=%d\n",__func__,__LINE__, chip->gpio_start);
 
 	mutex_init(&chip->i2c_lock);
 	/*
