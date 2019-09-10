@@ -407,6 +407,12 @@
 		pca,gpio-base = <400>;
         status = "okay";
     };
+    
+    isl29023@44 {
+		compatible = "fsl,isl29023";
+		reg = <0x44>;
+		rext = <499>;
+	};
  
 };
 
