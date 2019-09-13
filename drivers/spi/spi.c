@@ -699,8 +699,10 @@ static void spi_set_cs(struct spi_device *spi, bool enable)
 	if (spi->mode & SPI_CS_HIGH)
 		enable = !enable;
 
-	if (gpio_is_valid(spi->cs_gpio))
+	if (gpio_is_valid(spi->cs_gpio)){
+		gpio_direction_output(spi->cs_gpio,spi->mode & SPI_CS_HIGH ? 0 : 1);
 		gpio_set_value(spi->cs_gpio, !enable);
+	}
 	else if (spi->master->set_cs)
 		spi->master->set_cs(spi, !enable);
 }
