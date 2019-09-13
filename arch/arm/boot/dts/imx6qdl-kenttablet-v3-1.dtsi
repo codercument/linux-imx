@@ -302,6 +302,43 @@
     };
 };
 
+&ecspi2 {
+    fsl,spi-num-chipselects = <2>;
+	cs-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,<&gpio2 7 GPIO_ACTIVE_LOW>;
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_ecspi2>;
+    status = "okay";
+        
+	gpiom1: gpio@0 {
+	
+                 compatible = "microchip,mcp23s08";
+                 #gpio-cells = <1>;
+                 gpio-controller;
+                 reg = <0>;
+                 mcp,spi-present-mask = <0x03>;
+                 mcp,gpio-base = <300>;
+                 spi-max-frequency = <10000000>;
+                 #interrupt-controller;
+                 #interrupt-parent = <&gpio6>;
+ 				 #interrupts = <11 4>;
+                 #interrupt-cells = <2>;
+          };  
+          
+          gpiom2: gpio@1 {
+                 compatible = "microchip,mcp23s08";
+                 #gpio-cells = <3>;
+                 gpio-controller;
+                 reg = <1>;
+                 mcp,spi-present-mask = <0x03>;
+                 mcp,gpio-base = <316>;
+                 spi-max-frequency = <10000000>;
+                 #interrupt-controller;
+                 #interrupt-parent = <&gpio2>;
+ 				 #interrupts = <3 4>;
+                 #interrupt-cells = <2>;
+          };        
+};
+
 &fec {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
@@ -635,7 +672,9 @@
 			fsl,pins = <                 
 				MX6QDL_PAD_CSI0_DAT10__ECSPI2_MISO	0x100b1                 
 				MX6QDL_PAD_CSI0_DAT9__ECSPI2_MOSI	0x100b1                 
-				MX6QDL_PAD_CSI0_DAT8__ECSPI2_SCLK	0x100b1             
+				MX6QDL_PAD_CSI0_DAT8__ECSPI2_SCLK	0x100b1
+				MX6QDL_PAD_NANDF_D2__GPIO2_IO02     0x1b0b0  
+				MX6QDL_PAD_NANDF_D7__GPIO2_IO07     0x1b0b0
 			>;          
 		}; 		
 

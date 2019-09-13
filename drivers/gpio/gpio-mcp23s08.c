@@ -168,9 +168,13 @@ static int mcp23s08_read(struct mcp23s08 *mcp, unsigned reg)
 	u8	tx[2], rx[1];
 	int	status;
 
-	tx[0] = mcp->addr | 0x01;
+ 	if(mcp->addr == 0x42){
+ 		reg = reg * 2 + 1;
+ 	}else
+ 		reg = reg * 2;
+ 	tx[0] = 0x40 | 0x01;
 	tx[1] = reg;
-	status = spi_write_then_read(mcp->data, tx, sizeof(tx), rx, sizeof(rx));
+	status = spi_write_then_read(mcp->data, tx, sizeof tx, rx, sizeof rx);
 	return (status < 0) ? status : rx[0];
 }
 
@@ -178,30 +182,29 @@ static int mcp23s08_write(struct mcp23s08 *mcp, unsigned reg, unsigned val)
 {
 	u8	tx[3];
 
-	tx[0] = mcp->addr;
+ 	if(mcp->addr == 0x42){
+ 		reg = reg * 2 + 1;
+ 	}else
+ 		reg = reg * 2;
+ 	tx[0] = 0x40;
 	tx[1] = reg;
 	tx[2] = val;
-	return spi_write_then_read(mcp->data, tx, sizeof(tx), NULL, 0);
+	return spi_write_then_read(mcp->data, tx, sizeof tx, NULL, 0);
 }
 
 static int
 mcp23s08_read_regs(struct mcp23s08 *mcp, unsigned reg, u16 *vals, unsigned n)
 {
-	u8	tx[2], *tmp;
-	int	status;
-
-	if ((n + reg) > sizeof(mcp->cache))
+	int r,i;
+	if ((n + reg) > sizeof mcp->cache)
 		return -EINVAL;
-	tx[0] = mcp->addr | 0x01;
-	tx[1] = reg;
-
-	tmp = (u8 *)vals;
-	status = spi_write_then_read(mcp->data, tx, sizeof(tx), tmp, n);
-	if (status >= 0) {
-		while (n--)
-			vals[n] = tmp[n]; /* expand to 16bit */
+	for(i=0;i<n;i++){
+		r = mcp23s08_read(mcp, reg + i);
+		if (r < 0)
+			return r;
+		vals[i] = r;
 	}
-	return status;
+	return n;
 }
 
 static int mcp23s17_read(struct mcp23s08 *mcp, unsigned reg)
@@ -565,7 +568,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
 	mcp->chip.set = mcp23s08_set;
 	mcp->chip.dbg_show = mcp23s08_dbg_show;
 #ifdef CONFIG_OF_GPIO
-	mcp->chip.of_gpio_n_cells = 2;
+	mcp->chip.of_gpio_n_cells = 3;
 	mcp->chip.of_node = dev->of_node;
 #endif
 
@@ -656,6 +659,17 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
 	status = mcp->ops->write(mcp, MCP_GPPU, pdata->chip[cs].pullups);
 	if (status < 0)
 		goto fail;
+
+	status = mcp->ops->write(mcp, MCP_IODIR, 0xFF);
+
+	if (status < 0)
+		goto fail;
+
+	status = mcp->ops->write(mcp, MCP_OLAT, 0xFF);
+	if (status < 0)
+		goto fail;
+	mcp->cache[MCP_IODIR] = 0xFF;
+	mcp->cache[MCP_OLAT]  = 0xFF;
 
 	status = mcp->ops->read_regs(mcp, 0, mcp->cache, ARRAY_SIZE(mcp->cache));
 	if (status < 0)
@@ -860,7 +874,7 @@ static int mcp23s08_probe(struct spi_device *spi)
 	int				chips = 0;
 	struct mcp23s08_driver_data	*data;
 	int				status, type;
-	unsigned			ngpio = 0;
+	unsigned			ngpio = 0, gpio_base, base=-1;
 	const struct			of_device_id *match;
 	u32				spi_present_mask = 0;
 
@@ -883,8 +897,15 @@ static int mcp23s08_probe(struct spi_device *spi)
 			return -ENODEV;
 		}
 
+		status = of_property_read_u32(spi->dev.of_node, "mcp,gpio-base", &gpio_base);
+		if (status) {
+			gpio_base = -1;
+		}
+
+		base = gpio_base;
+
 		pdata = &local_pdata;
-		pdata->base = -1;
+		pdata->base = gpio_base;
 		for (addr = 0; addr < ARRAY_SIZE(pdata->chip); addr++) {
 			pdata->chip[addr].pullups = 0;
 			if (spi_present_mask & (1 << addr))
@@ -940,9 +961,10 @@ static int mcp23s08_probe(struct spi_device *spi)
 		status = mcp23s08_probe_one(data->mcp[addr], &spi->dev, spi,
 					    0x40 | (addr << 1), type, pdata,
 					    addr);
-		if (status < 0)
+		if (status < 0){
+			data->mcp[addr] = NULL;
 			goto fail;
-
+		}
 		if (pdata->base != -1)
 			pdata->base += data->mcp[addr]->chip.ngpio;
 		ngpio += data->mcp[addr]->chip.ngpio;

@@ -2005,7 +2005,7 @@ CONFIG_GPIO_74X164=y
 #
 # SPI or I2C GPIO expanders
 #
-# CONFIG_GPIO_MCP23S08 is not set
+CONFIG_GPIO_MCP23S08=y
 
 #
 # USB GPIO expanders
