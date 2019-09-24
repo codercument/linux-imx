@@ -415,6 +415,13 @@ static const struct snd_kcontrol_new cs42l73_snd_controls[] = {
 
 	SOC_DOUBLE("NG Enable Switch", CS42L73_NGCAB, 6, 7, 1, 0),
 	SOC_SINGLE("NG Boost Switch", CS42L73_NGCAB, 5, 1, 0),
+	SOC_SINGLE("MIC2Bias", CS42L73_PWRCTL2, 7, 1, 1),
+	SOC_SINGLE("MIC1Bias", CS42L73_PWRCTL2, 6, 1, 1),
+	SOC_SINGLE("MIC1-Input", CS42L73_ADCIPC, 3, 1, 0),
+	SOC_SINGLE("MIC2-Input", CS42L73_ADCIPC, 7, 1, 0),
+	SOC_SINGLE("PDN", CS42L73_PWRCTL1, 0, 1, 1),
+	SOC_SINGLE("PDN ASPIN", CS42L73_PWRCTL2, 2, 1, 1),
+	SOC_SINGLE("PDN ASPOUT", CS42L73_PWRCTL2, 3, 1, 1),
 	/*
 	    NG Threshold depends on NG_BOOTSAB, which selects
 	    between two threshold scales in decibels.
